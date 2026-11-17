@@ -1,5 +1,6 @@
 # agile_project_pong
-
+pip install -r requirements.txt
+python main.py
 
 
 ## Getting started
