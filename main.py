@@ -3,7 +3,7 @@
 # Contains the start menu loop with an option to start or exit.
 
 import pygame
-from settings import WIDTH, HEIGHT, FPS, BG_COLOR
+from Shared.settings import WIDTH, HEIGHT, FPS, BG_COLOR
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
