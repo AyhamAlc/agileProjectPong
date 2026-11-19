@@ -23,3 +23,12 @@ class GameField:
         pygame.draw.line(surface, (220, 220, 220), (640, 380), (640 ,460), 2)
         pygame.draw.line(surface, (220, 220, 220), (640, 500), (640 ,580), 2)
         pygame.draw.line(surface, (220, 220, 220), (640, 620), (640 ,680), 2)
+
+    def check_goal(self, ball):
+        """Return "left" or "right" if the ball crossed that border, else None."""
+        if ball.x - ball.radius <= self.rect.left:
+            return "left"
+        if ball.x + ball.radius >= self.rect.right:
+            return "right"
+        return None
+    
