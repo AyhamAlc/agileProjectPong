@@ -6,6 +6,7 @@ import pygame
 from Models.ball import ball
 from Models.paddle import Paddle
 from Models.field import GameField
+from Models.menu import Menu
 
 print(GameField.__module__)
 print(GameField.__init__)
@@ -22,6 +23,12 @@ game_field = GameField(0, 0, WIDTH, HEIGHT)
 running = True
 dt = 0
 
+# start menu
+menu = Menu(0, 0, WIDTH, HEIGHT, BG_COLOR)
+choice = menu.run(screen)
+if choice == "quit":
+    pygame.quit()
+    raise SystemExit
 
 while running:
 
