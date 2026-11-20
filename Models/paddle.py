@@ -1,25 +1,26 @@
 import pygame
 import math
+from Shared.settings import HEIGHT
 class Paddle:
     """
     Keyboard controlled paddle
     """
-    def __init__(self, width: int, height: int, speed: int, left:int, top:int):
+    def __init__(self, width: int, height: int, speed: int, left:int):
         """
-        Create a paddle at (left, top) coordinates
+        Create a paddle at (left, top) coordinates centered on the y-axis
 
         Args:
             width: Paddle width in pixels
             height: Paddle height in pixels
             speed: Distance to move per update, in pixels
             left: initial x-coordinate of paddle left edge
-            top: initial y-coordinate of paddle top edge
         """
+        CENTER_Y = HEIGHT // 2
         self.width = width
         self.height = height
         self.speed = speed
-        self.initial_xy = (left, top)
-        self.rect = pygame.Rect(left, top, width, height)
+        self.initial_topleft = (left, CENTER_Y)
+        self.rect = pygame.Rect(left, CENTER_Y, width, height)
 
     def draw(self, surface: pygame.Surface) -> None:
         """
@@ -66,4 +67,4 @@ class Paddle:
         """
         Resets paddle to initial position
         """
-        self.rect.topleft = self.initial_xy
+        self.rect.topleft = self.initial_topleft

@@ -4,6 +4,7 @@
 
 import pygame
 from Models.ball import ball
+from Models.paddle import Paddle
 from Models.field import GameField
 
 print(GameField.__module__)
@@ -16,6 +17,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pong")
 clock = pygame.time.Clock()
 game_ball = ball()
+player_paddle  = Paddle(20, 80, 10, 40)
 game_field = GameField(0, 0, WIDTH, HEIGHT)
 running = True
 dt = 0
@@ -34,6 +36,9 @@ while running:
         running = False
     game_ball.ball_movement()
     game_ball.draw(screen)
+
+    player_paddle.update(pygame.key.get_pressed(), screen.get_rect())
+    player_paddle.draw(screen)
     pygame.display.flip()
     clock.tick(FPS)
 
