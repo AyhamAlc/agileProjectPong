@@ -28,7 +28,8 @@ class GameField:
         """Return "left" or "right" if the ball crossed that border, else None."""
         if ball.x - ball.radius <= self.rect.left:
             return "left"
-        if ball.x + ball.radius >= self.rect.right:
-            return "right"
+        # currently only checks for right goal, left goal is not implemented yet
+        #if ball.x + ball.radius >= self.rect.right:
+        #    return "right"
         return None
     

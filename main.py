@@ -4,6 +4,7 @@
 
 import pygame
 from Models.ball import ball
+from Models.game import Collision
 from Models.paddle import Paddle
 from Models.field import GameField
 from Models.menu import Menu
@@ -31,7 +32,9 @@ if choice == "quit":
     raise SystemExit
 
 while running:
-
+    Collision.collision_detection(game_ball, player_paddle)
+    Collision.wall_collision_detection(game_ball, game_field)
+    Collision.third_wall_collision_detection(game_ball, game_field)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
