@@ -10,7 +10,7 @@ class ball:
         self.radius = RADIUS
         self.color = BALL_COLOR
         self.speed = SPEED
-        self.direction = 0  # Default direction in degrees (0 is to the right)
+        self.direction = 180  # Default direction in degrees (0 is to the right)
 
 
 
