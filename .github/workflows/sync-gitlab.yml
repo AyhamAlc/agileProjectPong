@@ -1,0 +1,34 @@
+name: Sync main from GitLab
+
+on:
+  schedule:
+    - cron: "0 */2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout GitHub repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure SSH for GitLab
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "${{ secrets.GITLAB_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H git.chalmers.se >> ~/.ssh/known_hosts
+
+      - name: Sync main branch
+        env:
+          GITLAB_REPO_URL: ${{ secrets.GITLAB_REPO_URL }}
+        run: |
+          git remote add gitlab "$GITLAB_REPO_URL"
+          git fetch gitlab main
+          git push origin refs/remotes/gitlab/main:refs/heads/gitlab-main --force
