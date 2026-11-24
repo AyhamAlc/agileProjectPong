@@ -1,4 +1,5 @@
 import pygame
+import Models.field
 
 class Collision:
 
@@ -35,5 +36,5 @@ class Collision:
         Check for collision between the ball and the third wall (the far side) of the field.
         If a collision is detected, reverse the ball's horizontal direction.
         """
-        if ball.x - ball.radius <= field.rect.left or ball.x + ball.radius >= field.rect.right:
+        if ball.x - ball.radius <= field.rect.left or ball.x + ball.radius >= field.rect.right and Models.field.isSinglePlayer:
             ball.direction = (180 - ball.direction) % 360  # Reverse the ball's horizontal direction
