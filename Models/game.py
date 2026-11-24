@@ -5,7 +5,7 @@ import pygame
 
 class Collision:
 
-    def collision_detection(ball, paddle):
+    def collision_detection(ball, paddles):
         """
         Check for collision between the ball and the paddle.
         If a collision is detected, reverse the ball's direction.
@@ -16,12 +16,13 @@ class Collision:
             ball.radius * 2,
             ball.radius * 2,
         )
-        if paddle.rect.colliderect(ball_rect):
-            ball.direction = (180- ball.direction) % 360  # Reverse the ball's horizontal direction
-            offset = (ball.y - paddle.rect.centery) / (paddle.rect.height / 2)
-            ball.direction += offset * 45  # Adjust the angle based on where it hit the
-            # Ensure the ball's direction is within 0-360 degrees
-            ball.direction = ball.direction % 360
+        for paddle in paddles.values():
+            if paddle.rect.colliderect(ball_rect):
+                ball.direction = (180- ball.direction) % 360  # Reverse the ball's horizontal direction
+                offset = (ball.y - paddle.rect.centery) / (paddle.rect.height / 2)
+                ball.direction += offset * 45  # Adjust the angle based on where it hit the
+                # Ensure the ball's direction is within 0-360 degrees
+                ball.direction = ball.direction % 360
 
 
     def wall_collision_detection(ball, field):
