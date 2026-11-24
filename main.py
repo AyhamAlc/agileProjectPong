@@ -19,7 +19,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pong")
 clock = pygame.time.Clock()
 game_ball = ball()
-player_paddle  = Paddle(20, 80, 10, 40)
+player_paddle  = Paddle(20, 80, 10, 40, True)
 game_field = GameField(0, 0, WIDTH, HEIGHT)
 running = True
 dt = 0
