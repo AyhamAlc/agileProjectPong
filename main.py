@@ -8,18 +8,17 @@ from Models.game import Collision
 from Models.paddle import Paddle
 from Models.field import GameField
 from Models.menu import Menu
+from Shared.settings import WIDTH, HEIGHT, FPS, BG_COLOR, PADDLE_SIZES, PADDLE_SPEED, PADDLE_COLOR
 
 print(GameField.__module__)
 print(GameField.__init__)
-
-from Shared.settings import WIDTH, HEIGHT, FPS, BG_COLOR 
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pong")
 clock = pygame.time.Clock()
 game_ball = ball()
-player_paddle  = Paddle(20, 80, 10, 40, True)
+player_paddles = Paddle.init_x_mirrored_paddles(30, PADDLE_SIZES["m"], PADDLE_SPEED["medium"], 40, 40, False, (HEIGHT//2), PADDLE_COLOR)
 game_field = GameField(0, 0, WIDTH, HEIGHT)
 running = True
 dt = 0
@@ -32,7 +31,7 @@ if choice == "quit":
     raise SystemExit
 
 while running:
-    Collision.collision_detection(game_ball, player_paddle)
+    Collision.collision_detection(game_ball, player_paddles)
     Collision.wall_collision_detection(game_ball, game_field)
     Collision.third_wall_collision_detection(game_ball, game_field)
     for event in pygame.event.get():
@@ -47,8 +46,9 @@ while running:
     game_ball.ball_movement()
     game_ball.draw(screen)
 
-    player_paddle.update(pygame.key.get_pressed(), screen.get_rect())
-    player_paddle.draw(screen)
+    for paddle in player_paddles.values():
+        paddle.update_and_draw(pygame.key.get_pressed(), screen)
+    
     pygame.display.flip()
     clock.tick(FPS)
 
