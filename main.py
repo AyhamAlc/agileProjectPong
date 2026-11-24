@@ -4,7 +4,7 @@
 
 import pygame
 from Models.ball import ball
-from Models.game import Collision
+from Models.collision import Collision
 from Models.paddle import Paddle
 from Models.field import GameField
 from Models.menu import Menu
