@@ -2,15 +2,14 @@
 # Field class: draws the background and the 3 walls
 # the ball bounces off (top, bottom, and the far side).
 import pygame
+isSinglePlayer = False
 
 class GameField:
-
     def __init__(self, x, y, width, height):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-
         self.rect = pygame.Rect(x, y, width, height)
 
     def draw(self, surface):
@@ -24,12 +23,14 @@ class GameField:
         pygame.draw.line(surface, (220, 220, 220), (640, 500), (640 ,580), 2)
         pygame.draw.line(surface, (220, 220, 220), (640, 620), (640 ,680), 2)
 
+    
     def check_goal(self, ball):
+        
         """Return "left" or "right" if the ball crossed that border, else None."""
         if ball.x - ball.radius <= self.rect.left:
             return "left"
-        # currently only checks for right goal, left goal is not implemented yet
-        #if ball.x + ball.radius >= self.rect.right:
-        #    return "right"
+        
+        if ball.x + ball.radius >= self.rect.right and not isSinglePlayer:
+            return "right"
         return None
     
