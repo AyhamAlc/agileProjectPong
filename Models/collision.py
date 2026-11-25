@@ -16,11 +16,23 @@ class Collision:
         )
         for paddle in paddles.values():
             if paddle.rect.colliderect(ball_rect):
-                ball.direction = (180- ball.direction) % 360  # Reverse the ball's horizontal direction
                 offset = (ball.y - paddle.rect.centery) / (paddle.rect.height / 2)
-                ball.direction += offset * 45  # Adjust the angle based on where it hit the
-                # Ensure the ball's direction is within 0-360 degrees
-                ball.direction = ball.direction % 360
+
+                # Make sure the ball is moving towards the paddle before changing its direction, preventing the ball from getting stuck inside the paddle (AKA bounce towards the paddle)
+                if 90 < ball.direction < 270:
+                    ball.x = paddle.rect.right + ball.radius
+                    new_dir = (180 - ball.direction) + offset * 45
+                    # Normalize to [-180, 180] and clamp to [-75, 75] so it always goes right
+                    new_dir = (new_dir + 180) % 360 - 180
+                    ball.direction = max(-75, min(75, new_dir)) % 360
+
+                # Right paddle (ball was moving right: direction < 90 or > 270)
+                elif ball.direction < 90 or ball.direction > 270:
+                    ball.x = paddle.rect.left - ball.radius
+                    new_dir = (180 - ball.direction) + offset * 45
+                    # Clamp to [105, 255] so it always goes left
+                    new_dir = new_dir % 360
+                    ball.direction = max(105, min(255, new_dir))
 
 
     def wall_collision_detection(ball, field):
