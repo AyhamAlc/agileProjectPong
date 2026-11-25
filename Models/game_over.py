@@ -1,8 +1,3 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) # 强制把最外层目录加进搜索路径
-
-
 from Shared.settings import COLORS
 import pygame
 

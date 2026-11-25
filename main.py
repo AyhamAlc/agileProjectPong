@@ -9,6 +9,7 @@ from Models.paddle import Paddle
 from Models.field import GameField
 from Models.menu import Menu
 from Shared.settings import WIDTH, HEIGHT, FPS, BG_COLOR, PADDLE_SIZES, PADDLE_SPEED, PADDLE_COLOR
+from Models.game_over import GameOverScreen
 print(GameField.__module__)
 print(GameField.__init__)
 
@@ -21,6 +22,11 @@ player_paddles = Paddle.init_x_mirrored_paddles(30, PADDLE_SIZES["m"], PADDLE_SP
 game_field = GameField(0, 0, WIDTH, HEIGHT)
 running = True
 dt = 0
+
+#gameover state 
+game_over_active = False #check if game is paused and game over screen is active
+game_over_ui = None
+last_goal_side = None #for resetting the ball after game over, to know which side scored last
 
 # start menu
 menu = Menu(0, 0, WIDTH, HEIGHT, BG_COLOR)
@@ -36,18 +42,42 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        
+        #if the game is over, handle the game over screen events
+        if game_over_active and game_over_ui:
+            action = game_over_ui.handle_events(event)
+            if action == "replay":
+                game_over_active = False
+                game_over_ui = None
+                #when replaying, reset the ball to the last goal side so that the player who lost gets to serve
+                game_ball.reset(last_goal_side)
+            elif action == "menu":
+                #TODO: implement a way to go back to the main menu without quitting the game
+                running = False
+            elif action == "quit":
+                running = False
+
+    # If GAME over is not active, check for goals and update the game state
+    if not game_over_active:
+        #check if goal is scored, if so, set game_over_active to True and create a GameOverScreen instance
+        goal_side = game_field.check_goal(game_ball)
+        if goal_side is not None:
+            last_goal_side = goal_side
+            game_over_active = True
+            winner_name = "Player 1" if goal_side == "right" else "Player 2"
+            game_over_ui = GameOverScreen(screen, winner_name)
+        game_ball.ball_movement()
+      
     screen.fill(BG_COLOR)
     game_field.draw(screen)
-    goal_side = game_field.check_goal(game_ball)
-    if goal_side is not None:
-        game_ball.reset(goal_side)
-    game_ball.ball_movement()
     game_ball.draw(screen)
 
     for paddle in player_paddles.values():
         paddle.update_and_draw(pygame.key.get_pressed(), screen)
-    
+
+    #if game over is active, draw the game over screen on top of the game
+    if game_over_active and game_over_ui:
+        game_over_ui.draw()
+        
     pygame.display.flip()
     clock.tick(FPS)
 
