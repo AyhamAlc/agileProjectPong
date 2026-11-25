@@ -9,7 +9,6 @@ from Models.paddle import Paddle
 from Models.field import GameField
 from Models.menu import Menu
 from Shared.settings import WIDTH, HEIGHT, FPS, BG_COLOR, PADDLE_SIZES, PADDLE_SPEED, PADDLE_COLOR
-
 print(GameField.__module__)
 print(GameField.__init__)
 
@@ -42,7 +41,7 @@ while running:
     game_field.draw(screen)
     goal_side = game_field.check_goal(game_ball)
     if goal_side is not None:
-        running = False
+        game_ball.reset(goal_side)
     game_ball.ball_movement()
     game_ball.draw(screen)
 
@@ -53,5 +52,3 @@ while running:
     clock.tick(FPS)
 
 pygame.quit()
-
-
