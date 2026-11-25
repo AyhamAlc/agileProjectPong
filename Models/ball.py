@@ -30,3 +30,18 @@ class ball:
         self.x += self.speed * math.cos(rad)
         self.y += self.speed * math.sin(rad)
 
+    def choose_ball_direction(self, goal_side):
+                if goal_side == "left":
+                    return 180
+                else:
+                    return 0
+
+
+    def reset(self, goal_side):
+        self.x = float(X_CORD_CIRCLE)
+        self.y = float(Y_CORD_CIRCLE)
+        if goal_side is None:
+            self.direction = 180 
+        else:
+            self.direction = self.choose_ball_direction(goal_side)
+
