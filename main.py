@@ -9,7 +9,6 @@ from Models.paddle import Paddle
 from Models.field import GameField
 from Models.menu import Menu
 from Shared.settings import WIDTH, HEIGHT, FPS, BG_COLOR, PADDLE_SIZES, PADDLE_SPEED, PADDLE_COLOR
-
 print(GameField.__module__)
 print(GameField.__init__)
 
@@ -53,5 +52,3 @@ while running:
     clock.tick(FPS)
 
 pygame.quit()
-
-
