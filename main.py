@@ -42,7 +42,7 @@ while running:
     game_field.draw(screen)
     goal_side = game_field.check_goal(game_ball)
     if goal_side is not None:
-        running = False
+        game_ball.reset(goal_side)
     game_ball.ball_movement()
     game_ball.draw(screen)
 
