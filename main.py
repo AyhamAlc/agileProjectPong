@@ -33,6 +33,12 @@ game_over_active = False #check if game is paused and game over screen is active
 game_over_ui = None
 last_goal_side = None #for resetting the ball after game over, to know which side scored last
 
+#game ending condition and score storage for two players mode 
+TARGET_SCORE = 8 #Default target score to win the game
+p1_score = 0
+p2_score = 0
+
+
 # start menu
 menu = Menu(0, 0, WIDTH, HEIGHT, BG_COLOR)
 choice = menu.run(screen)
@@ -59,6 +65,10 @@ while running:
                 scoreboard.reset()
                 game_ball.reset(last_goal_side)
 
+                #reset scores for two players mode
+                p1_score = 0
+                p2_score = 0
+                
                 for paddle in player_paddles.values():
                     paddle.reset()
             elif action == "menu":
@@ -75,13 +85,19 @@ while running:
         if goal_side is not None:
             scoreboard.add_point(goal_side)
             last_goal_side = goal_side
+            #increment the scores for two players mode
+            if goal_side == "left":
+                p2_score += 1
+            else:
+                p1_score += 1
+            #check the game ending condition
+            if p1_score >= TARGET_SCORE or p2_score >= TARGET_SCORE:
+                game_over_active = True
+                winner_name = "Player 1" if goal_side == "right" else "Player 2"
+                game_over_ui = GameOverScreen(screen, winner_name)
+            else:
+                game_ball.reset(goal_side)
 
-            for paddle in player_paddles.values():
-                paddle.reset()
-
-            game_over_active = True
-            winner_name = "Player 1" if goal_side == "right" else "Player 2"
-            game_over_ui = GameOverScreen(screen, winner_name)
         game_ball.ball_movement()
         scoreboard.update(dt)
 
