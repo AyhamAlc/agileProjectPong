@@ -14,7 +14,9 @@ X_CORD_CIRCLE = 640
 Y_CORD_CIRCLE = 360
 RADIUS = 12
 BALL_COLOR = (255, 0 , 0)
-SPEED = 15
+BALL_INITIAL_SPEED = 7
+BALL_SPEED_INCREMENT = 0.5
+BALL_MAX_SPEED = 25
 
 """Dictionary of all colors provided by pygame Color"""
 """Key is the Name entry on this table: https://www.pygame.org/docs/ref/color_list.html"""

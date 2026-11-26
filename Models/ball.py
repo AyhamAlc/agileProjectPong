@@ -1,6 +1,6 @@
 import pygame
 import math
-from Shared.settings import X_CORD_CIRCLE, Y_CORD_CIRCLE, RADIUS, BALL_COLOR , SPEED
+from Shared.settings import X_CORD_CIRCLE, Y_CORD_CIRCLE, RADIUS, BALL_COLOR , BALL_INITIAL_SPEED, BALL_MAX_SPEED, BALL_SPEED_INCREMENT
 
 class ball:
 
@@ -9,7 +9,9 @@ class ball:
         self.y = float(Y_CORD_CIRCLE)
         self.radius = RADIUS
         self.color = BALL_COLOR
-        self.speed = SPEED
+        self.initial_speed = BALL_INITIAL_SPEED
+        self.current_speed = BALL_INITIAL_SPEED
+        self.max_speed = BALL_MAX_SPEED
         self.direction = 180  # Default direction in degrees (0 is to the right)
 
 
@@ -27,8 +29,8 @@ class ball:
         """
         rad = math.radians(self.direction)
 
-        self.x += self.speed * math.cos(rad)
-        self.y += self.speed * math.sin(rad)
+        self.x += self.current_speed * math.cos(rad)
+        self.y += self.current_speed * math.sin(rad)
 
     def choose_ball_direction(self, goal_side):
                 if goal_side == "left":
@@ -36,10 +38,16 @@ class ball:
                 else:
                     return 0
 
-
+    def increase_speed(self):
+        self.current_speed = min(self.current_speed + BALL_SPEED_INCREMENT, self.max_speed)
+    
+    def reset_speed(self):
+        self.current_speed = self.initial_speed
+    
     def reset(self, goal_side):
         self.x = float(X_CORD_CIRCLE)
         self.y = float(Y_CORD_CIRCLE)
+        self.reset_speed()
         if goal_side is None:
             self.direction = 180 
         else:
