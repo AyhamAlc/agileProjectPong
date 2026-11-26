@@ -1,6 +1,6 @@
 import pygame
 import math
-from Shared.settings import WIDTH
+from Shared.settings import WIDTH, PADDLE_MAX_SPEED, PADDLE_SPEED_INCREMENT
 class Paddle:
     """
     Keyboard controlled paddle
@@ -30,10 +30,13 @@ class Paddle:
         """
         self.width = width
         self.height = height
+        self.initial_speed = speed
+        self.current_speed = speed
+        self.max_speed = PADDLE_MAX_SPEED
         self.speed = speed
-        self.initial_topleft = (left, top)
         self.rect = pygame.Rect(left, top, width, height)
         self.rect.centery = center_y
+        self.initial_topleft = self.rect.topleft
         self.color = color
         if is_wasd:
             self.key_up = pygame.K_w
@@ -92,7 +95,7 @@ class Paddle:
         """
         direction = self._get_direction(keys)
 
-        self._move(self.speed * direction)
+        self._move(self.current_speed * direction)
 
         self.rect.clamp_ip(field_rect)#Limits paddle movement within field_rect
 
@@ -126,11 +129,14 @@ class Paddle:
         elif amount < 0:
             self.rect.y += math.floor(amount)
 
-    def reset(self) -> None:
-        """
-        Resets paddle to initial position
-        """
+    def increase_speed(self, increment):
+        self.current_speed = min(
+            self.current_speed + increment,
+            self.max_speed)
+            
+    def reset(self):
         self.rect.topleft = self.initial_topleft
+        self.current_speed = self.initial_speed # Reset speed to initial speed
 
     def update_and_draw(self, keys: pygame.key.ScancodeWrapper, field_rect: pygame.Rect) -> None:
         """

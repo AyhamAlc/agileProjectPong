@@ -10,6 +10,7 @@ from Models.field import GameField
 from Models.menu import Menu
 from Shared.settings import WIDTH, HEIGHT, FPS, BG_COLOR, PADDLE_SIZES, PADDLE_SPEED, PADDLE_COLOR
 from Models.game import LiveScoreBoard
+from Models.game import speed_modifier
 import Models.field
 from Models.game_over import GameOverScreen
 print(GameField.__module__)
@@ -20,6 +21,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pong")
 clock = pygame.time.Clock()
 game_ball = ball()
+speed_control = speed_modifier()
 player_paddles = Paddle.init_x_mirrored_paddles(30, PADDLE_SIZES["m"], PADDLE_SPEED["medium"], 40, 40, False, (HEIGHT//2), PADDLE_COLOR)
 game_field = GameField(0, 0, WIDTH, HEIGHT)
 running = True
@@ -40,6 +42,7 @@ if choice == "quit":
 clock.tick()
 
 while running:
+   
     Collision.collision_detection(game_ball, player_paddles)
     Collision.wall_collision_detection(game_ball, game_field)
     Collision.third_wall_collision_detection(game_ball, game_field)
@@ -55,6 +58,9 @@ while running:
                 #when replaying, reset the ball to the last goal side so that the player who lost gets to serve
                 scoreboard.reset()
                 game_ball.reset(last_goal_side)
+
+                for paddle in player_paddles.values():
+                    paddle.reset()
             elif action == "menu":
                 #TODO: implement a way to go back to the main menu without quitting the game
                 running = False
@@ -65,19 +71,31 @@ while running:
     if not game_over_active:
         #check if goal is scored, if so, set game_over_active to True and create a GameOverScreen instance
         goal_side = game_field.check_goal(game_ball)
+
         if goal_side is not None:
             scoreboard.add_point(goal_side)
             last_goal_side = goal_side
+
+            for paddle in player_paddles.values():
+                paddle.reset()
+
             game_over_active = True
             winner_name = "Player 1" if goal_side == "right" else "Player 2"
             game_over_ui = GameOverScreen(screen, winner_name)
         game_ball.ball_movement()
         scoreboard.update(dt)
+
+        """ball and paddle speed increment with time intervals"""
+        increment = speed_control.ball_speed_increment_with_time_intervals(dt)
+        if increment > 0:
+            game_ball.increase_speed(increment)
+
+        for paddle in player_paddles.values():
+            paddle.increase_speed(increment)
       
     screen.fill(BG_COLOR)
     game_field.draw(screen)
     game_ball.draw(screen)
-
     for paddle in player_paddles.values():
         paddle.update_and_draw(pygame.key.get_pressed(), screen)
 
@@ -89,5 +107,5 @@ while running:
         
     pygame.display.flip()
     dt = clock.tick(FPS)
-
+    
 pygame.quit()

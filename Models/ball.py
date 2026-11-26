@@ -1,7 +1,6 @@
 import pygame
 import math
-from Shared.settings import X_CORD_CIRCLE, Y_CORD_CIRCLE, RADIUS, BALL_COLOR , BALL_INITIAL_SPEED, BALL_MAX_SPEED, BALL_SPEED_INCREMENT
-
+from Shared.settings import X_CORD_CIRCLE, Y_CORD_CIRCLE, RADIUS, BALL_COLOR , BALL_INITIAL_SPEED, BALL_MAX_SPEED
 class ball:
 
     def __init__(self):
@@ -38,9 +37,11 @@ class ball:
                 else:
                     return 0
 
-    def increase_speed(self):
-        self.current_speed = min(self.current_speed + BALL_SPEED_INCREMENT, self.max_speed)
-    
+    def increase_speed(self, increment):
+        self.current_speed = min(
+            self.current_speed + increment,
+            self.max_speed)
+
     def reset_speed(self):
         self.current_speed = self.initial_speed
     
