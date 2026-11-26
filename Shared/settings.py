@@ -14,9 +14,14 @@ X_CORD_CIRCLE = 640
 Y_CORD_CIRCLE = 360
 RADIUS = 12
 BALL_COLOR = (255, 0 , 0)
-BALL_INITIAL_SPEED = 7
-BALL_SPEED_INCREMENT = 0.5
-BALL_MAX_SPEED = 25
+
+"""ball and paddle speed properties"""
+BALL_INITIAL_SPEED = 10
+INTERVAL_S = 30  # Time interval in seconds for speed increment
+BALL_SPEED_INCREMENT = 10
+PADDLE_SPEED_INCREMENT = 2
+BALL_MAX_SPEED = 45
+PADDLE_MAX_SPEED = 10
 
 """Dictionary of all colors provided by pygame Color"""
 """Key is the Name entry on this table: https://www.pygame.org/docs/ref/color_list.html"""

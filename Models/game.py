@@ -3,6 +3,8 @@
 # Creates the field, ball and paddle and connects them.
 import pygame
 
+from Shared.settings import BALL_SPEED_INCREMENT,INTERVAL_S, PADDLE_SPEED_INCREMENT
+
 class LiveScoreBoard:
 
     def __init__(self, x, y, left_color, right_color, font_size=72, single_player=False):
@@ -52,4 +54,26 @@ class LiveScoreBoard:
             self.draw_time(screen)
         else:
             self.draw_score(screen)
-        
+
+class speed_modifier:
+
+    def __init__(self):
+        self.past_ms = 0
+
+    def ball_speed_increment_with_time_intervals(self, dt):
+        self.past_ms += dt
+
+        if self.past_ms >= INTERVAL_S * 1000:
+            self.past_ms -= INTERVAL_S * 1000
+            return BALL_SPEED_INCREMENT
+
+        return 0
+    
+    def paddle_speed_increment_with_time_intervals(self, dt):
+        self.past_ms += dt
+
+        if self.past_ms >= INTERVAL_S * 1000:
+            self.past_ms -= INTERVAL_S * 1000
+            return PADDLE_SPEED_INCREMENT
+
+        return 0
