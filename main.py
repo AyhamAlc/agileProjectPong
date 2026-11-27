@@ -9,8 +9,7 @@ from Models.paddle import Paddle
 from Models.field import GameField
 from Models.menu import Menu
 from Shared.settings import WIDTH, HEIGHT, FPS, BG_COLOR, PADDLE_SIZES, PADDLE_SPEED, PADDLE_COLOR
-from Models.game import LiveScoreBoard
-from Models.game import speed_modifier
+from Models.game import LiveScoreBoard , speed_modifier, InputBox, run_name_screen
 import Models.field
 from Models.game_over import GameOverScreen
 print(GameField.__module__)
@@ -26,7 +25,7 @@ player_paddles = Paddle.init_x_mirrored_paddles(30, PADDLE_SIZES["m"], PADDLE_SP
 game_field = GameField(0, 0, WIDTH, HEIGHT)
 running = True
 dt = 0       
-scoreboard = LiveScoreBoard(screen.get_width() // 2, 50, (0, 128, 255), (255, 80, 80), single_player=Models.field.isSinglePlayer)
+
 
 #gameover state 
 game_over_active = False #check if game is paused and game over screen is active
@@ -37,6 +36,7 @@ last_goal_side = None #for resetting the ball after game over, to know which sid
 TARGET_SCORE = 8 #Default target score to win the game
 p1_score = 0
 p2_score = 0
+font =  pygame.font.Font(None,36)
 
 
 # start menu
@@ -46,6 +46,20 @@ if choice == "quit":
     pygame.quit()
     raise SystemExit
 clock.tick()
+
+if not Models.field.isSinglePlayer:
+        if not Models.field.isSinglePlayer:
+            name_boxes = [
+               InputBox(300, 50, 490, 250, font, BG_COLOR, (255, 255, 255), text="Player 1"),
+               InputBox(300, 50, 490, 330, font, BG_COLOR, (255, 255, 255), text="Player 2"),
+            ]
+            p1_name, p2_name = run_name_screen(screen, clock, name_boxes)
+        else:
+            p1_name = "Player"
+            p2_name = None
+
+scoreboard = LiveScoreBoard(screen.get_width() // 2, 50, (0, 128, 255), (255, 80, 80), single_player=Models.field.isSinglePlayer,left_name=p1_name,right_name=p2_name)
+
 
 while running:
    
@@ -93,7 +107,7 @@ while running:
             #check the game ending condition
             if p1_score >= TARGET_SCORE or p2_score >= TARGET_SCORE:
                 game_over_active = True
-                winner_name = "Player 1" if goal_side == "right" else "Player 2"
+                winner_name = p1_name if goal_side == "right" else p2_name
                 game_over_ui = GameOverScreen(screen, winner_name)
             else:
                 game_ball.reset(goal_side)
